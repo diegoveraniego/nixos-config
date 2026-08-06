@@ -125,6 +125,8 @@
     antigravity
     git
     gh
+    ardour
+    lmms
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
