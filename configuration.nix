@@ -127,6 +127,9 @@
     gh
     ardour
     lmms
+    sioyek
+    lilypond
+    frescobaldi
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -155,6 +158,12 @@
 
   # Enable flatpak support
   services.flatpak.enable = true;
+
+  # Doom Emacs add to path
+
+  environment.sessionVariables = {
+  PATH = [ "$HOME/.config/emacs/bin/" ];
+  };
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
