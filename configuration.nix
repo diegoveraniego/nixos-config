@@ -1,5 +1,4 @@
 # Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
@@ -42,6 +41,24 @@
     LC_TIME = "es_CL.UTF-8";
   };
 
+  # Hardware graphics stack
+
+  hardware.graphics = {
+  enable = true;
+  enable32Bit = true;
+  };
+
+  # AMD GPU optimizations
+  environment.variables = {
+    mesa_glthread = "true";
+    RADV_PERFTEST = "aco";
+    vblank_mode = "0";
+  };
+
+  # Kernel params for amdgpu
+  boot.kernelParams = [
+    "amdgpu.freesync_video=1"
+  ];
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
   services.xserver.enable = true;
@@ -102,11 +119,10 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    emacs # Editor wars
     wget
-    emacs
     fastfetch
     musescore
-    steam
     gamemode
     kdePackages.kdenlive
     kdePackages.kdeconnect-kde
@@ -130,6 +146,24 @@
     sioyek
     lilypond
     frescobaldi
+    vesktop
+    # Doom Emacs dependencies
+    ripgrep
+    fd
+    gnumake
+    gcc
+    libvterm
+    python3
+    shellcheck
+    wl-clipboard
+    graphviz
+    pandoc
+    pkg-config
+    libtool
+    nixfmt
+    sfizz
+    lv2
+    clap
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -142,9 +176,10 @@
 
   # Steam config
   programs.steam = {
-  remotePlay.openFirewall = true;  # Open ports in the firewall for Steam Remote Play
-  dedicatedServer.openFirewall = true; # Open ports for Source Dedicated Server hosting
-  # Other general flags if available can be set here.
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+    localNetworkGameTransfers.openFirewall = true;
   };
 
   # Fonts
@@ -152,6 +187,7 @@
     aporetic
     inter
     nerd-fonts.jetbrains-mono
+    symbola
   ];
 
   # List services that you want to enable:
@@ -162,7 +198,7 @@
   # Doom Emacs add to path
 
   environment.sessionVariables = {
-  PATH = [ "$HOME/.config/emacs/bin/" ];
+    PATH = [ "$HOME/.config/emacs/bin" ];
   };
 
   # Enable the OpenSSH daemon.
@@ -176,7 +212,7 @@
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # on your system were taken. It's perfectly fine and recommended to leave
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
